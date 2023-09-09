@@ -17,6 +17,7 @@ class ModelArgs:
 	dropout = 0.2
 	batch_size = 64
 	lr = 3e-4
+	rotary_emb_dim = 192
 
 config = ModelArgs() 
 
@@ -28,7 +29,7 @@ class attention_head(nn.Module):
 		self.value = nn.Linear(config.n_embd, head_size, bias=False) 
 		self.register_buffer('tril', torch.tril(torch.ones(config.block_size, config.block_size)))
 		self.dropout = nn.Dropout(config.dropout) 
-		self.rotary_emb = rotary_embedding.rotary_embedding(dim=32)
+		self.rotary_emb = rotary_embedding.rotary_embedding(dim=config.rotary_emb_dim)
 	def forward(self, x): 
 		B, T, C = x.shape 
 		k = self.key(x) 
